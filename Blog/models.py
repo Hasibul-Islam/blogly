@@ -11,6 +11,7 @@ class Post(models.Model):
     date_published = models.DateTimeField(auto_now_add=True)
     tags = models.CharField(max_length=255)
     category = models.CharField(max_length=255)
+    image_name = models.CharField(max_length=255)
     image = models.ImageField(upload_to='post_images/')
     image_credited = models.CharField(max_length=255, null=True, blank=True)
     body = RichTextField()
