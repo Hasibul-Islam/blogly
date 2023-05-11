@@ -17,12 +17,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 import Blog.urls as blog_urls
+import account.urls as account_urls
 from . import views
 from django.conf.urls.static import static
 from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('blog/', include(blog_urls)),
+    path('account/', include(account_urls)),
     path('', views.home, name="home"),
     path('contact-us/', views.contact_us, name="contact_us"),
     path('ckeditor/', include('ckeditor_uploader.urls')),
