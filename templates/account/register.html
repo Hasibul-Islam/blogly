@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="main-wrapper">
+    <header class="page-title theme-bg-light text-center gradient py-5">
+        <h1 class="heading">Blog Posts</h1>
+    </header>
+    <section class="content px-3 py-5 p-md-5">
+    
+        <div class="card">
+          <div class="card-header">{{ form_title }}</div>
+          <div class="card-body">
+            <form method="POST" class="needs-validation" novalidate>
+              {% csrf_token %}
+              {{ form|crispy }}
+              
+              <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+          </div>
+        </div>
+    </section>
+	    
+    <footer class="footer text-center py-2 theme-bg-dark">
+       
+        <p class="copyright"><a href="">FollowBlogly</a></p>
+       
+    </footer>
+  </div>
+{% endblock %}
+
