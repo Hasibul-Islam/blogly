@@ -14,7 +14,7 @@
 				    <div class="media">
 					    <img class="mr-3 img-fluid post-thumb d-none d-md-flex" src="{{ blog.image.url }}" alt="image">
 					    <div class="media-body">
-						    <h3 class="title mb-1"><a href="post.html">{{blog.title}}</a></h3>
+						    <h3 class="title mb-1"><a href="{% url 'post_detail' blog.pk %}">{{blog.title}}</a></h3>
 						    <div class="meta mb-1"><span class="date">{{blog.date_published}}</span><span class="time">{{blog.read_time}} min read</span><span class="comment"><a href="#">{{blog.comment_count}} comments</a></span></div>
 						    <div class="intro">{{blog.body|striptags|safe|truncatewords:20 }}</div>
 						    <a class="more-link" href="{% url 'post_detail' blog.pk %}">Read more &rarr;</a>

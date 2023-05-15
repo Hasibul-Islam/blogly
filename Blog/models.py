@@ -33,6 +33,9 @@ class Post(models.Model):
     category = models.CharField(max_length=255, choices=CATEGORIES)
     image = models.ImageField(upload_to=path_and_rename)
     image_credited = models.CharField(max_length=255, null=True, blank=True)
+    upvotes = models.ManyToManyField(User, related_name='upvoted_users')
+    downvotes = models.ManyToManyField(User, related_name='downvoted_users')
+    
     body = RichTextField()
     
 

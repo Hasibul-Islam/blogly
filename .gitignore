@@ -4,3 +4,4 @@ Blog/migrations/
 account/__pycache__/
 account/migrations/
 Blog/__pycache__/
+media/
