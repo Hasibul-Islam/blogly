@@ -39,7 +39,7 @@
 					    <a class="nav-link" href="{% url 'home' %}"><i class="fas fa-home fa-fw mr-2"></i>Blog Home <span class="sr-only">(current)</span></a>
 					</li>
 					<li class="nav-item">
-					    <a class="nav-link" href="{% url 'post_detail' 4 %}"><i class="fas fa-file-alt fa-fw mr-2"></i>Blog Post</a>
+					    <a class="nav-link" href="{% url 'create'  %}"><i class="fas fa-file-alt fa-fw mr-2"></i>Create New Blog</a>
 					</li>
 					<li class="nav-item">
 					    <a class="nav-link" href="{% url 'page' %}"><i class="fas fa-file-image fa-fw mr-2"></i>Blog Page</a>
@@ -48,8 +48,17 @@
 					    <a class="nav-link" href="{% url 'all_posts' %}"><i class="fas fa-archive fa-fw mr-2"></i>Blog Archive</a>
 					</li>
 					<li class="nav-item">
-					    <a class="nav-link btn btn-primary" href="{% url 'contact_us' %}"><i class="fas fa-envelope fa-fw mr-2"></i>Contact Us</a>
+					    <a class="nav-link" href="{% url 'contact_us' %}"><i class="fas fa-envelope fa-fw mr-2"></i>Contact Us</a>
 					</li>
+					{% if user.is_authenticated %}
+					<li class="nav-item">
+					    <a class="nav-link" href="{% url 'logout' %}"><i class="fa-sharp fa-regular fa-right-from-bracket fa-fade fa-sm"></i>Logout</a>
+					</li>
+					{% else%}
+					<li class="nav-item">
+					    <a class="nav-link" href="{% url 'login' %}"><i class="fas fa-sign-in fa-fw mr-2"></i>Login</a>
+					</li>
+					{% endif%}
 				</ul>
 				<hr>
 				<ul class="social-list list-inline py-3 mx-auto">

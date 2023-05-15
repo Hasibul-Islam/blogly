@@ -25,6 +25,28 @@
 						<figcaption class="mt-2 text-center image-caption">Image Credit: <a href="#" target="_blank">{{post.image_credited}}</a></figcaption>
 					</figure>
 					{{ post.body|safe }}
+					
+					<div class="upvote">
+						{% if user.is_authenticated %}
+						<p>Upvotes= {{ post.upvotes.all.count }}</p>
+    					<p>Downvotes= -{{ post.downvotes.all.count }}</p>
+						<form method="post">
+						{% csrf_token %}
+						{% if request.user in post.upvotes.all %}
+    					<button class="upvote btn btn-primary disabled" value="upvote" type="submit" name="">Upvote</button>
+						{% else %}
+						<button class="upvote btn btn-primary" value="upvote" type="submit" name="upvote">Upvote</button>
+						{% endif %}
+						{% if request.user in post.downvotes.all %}
+    					<button class="downvote btn btn-danger disabled" value="downvote" type="submit" name="">Downvote</button>
+						{% else %}
+						<button class="downvote btn btn-danger" value="downvote" type="submit" name="downvote">Downvote</button>
+						{% endif%}
+						{% else %}
+						  <a href="{% url 'login' %}" class="btn btn-sm btn-outline-success">Login to Upvote</a>
+						{% endif %}
+						
+					  </div>
 				<div class="comments-wrapper">
 
 
@@ -39,6 +61,7 @@
 						</div><!-- .comments-header -->
 
 						<div class="comments-inner">
+							{% if post.author != request.user %}
 							<form method="post">
 								{% csrf_token %}
 								<div class="input-group">
@@ -52,7 +75,7 @@
 								  <br>
 								  <button class="btn btn-primary btn-lg active" type='submit'>  Comment </button>
 								</form>
-							
+							{% endif %}
 							
 							<div id="comment-3"
 								class="comment byuser comment-author-andrew bypostauthor even thread-odd thread-alt depth-1">
@@ -85,14 +108,14 @@
 										<form method = "post">
 											{% csrf_token %}
 										<div class="form-group">
-											<button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#comment-form">Reply</button>
-										  </div>
+											<button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#comment-form" id="comment-form{{comment.pk}}">Reply</button>
+										</div>
 										  
-										  <div id="comment-form" class="collapse">
-											<div class="form-group">
+										  	<div id="comment-form{{comment.pk}}" class="collapse">
+												<div class="form-group">
 											  
-											  <textarea class="form-control" id="comment-text" name="reply"></textarea>
-											  <input type="hidden" name="object_pk" value="{{ comment.pk }}">
+											  	<textarea class="form-control" id="comment-text" name="reply"></textarea>
+											  	<input type="hidden" name="object_pk" value="{{ comment.pk }}">
 											</div>
 											<button type="submit" class="btn btn-primary">Submit</button>
 										  </div>
@@ -121,8 +144,8 @@
 
 											<div class="comment-metadata">
 												
-													<time datetime="2020-03-25T20:08:58+00:00"
-														title="March 25, 2020 at 8:08 pm">
+													<time datetime="{{reply_comment.date_published}} "
+														title="{{reply_comment.date_published}} ">
 														{{reply_comment.date_published}} </time>
 												</a>												
 											</div><!-- .comment-metadata -->
@@ -182,3 +205,5 @@
 	<!--//main-wrapper-->
 	
 {% endblock %}
+
+

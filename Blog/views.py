@@ -3,7 +3,10 @@ from .forms import PostForm
 from datetime import datetime
 from .models import Post, Comment
 from django.http import HttpResponseRedirect
+from django.http import JsonResponse
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.contrib.auth.decorators import login_required
+
 # Create your views here.
 import math
 
@@ -61,13 +64,44 @@ def post_detail(request, post_id):
         except:
             reply = None
             comment_id = None
-        comment=request.POST.get('comment', '')
+        try:
+            comment=request.POST.get('comment', '')
+        except:
+            comment = None
         author = request.user
         date_published = datetime.now()
-        if reply and comment_id:
+        
+        try:
+            upvote = request.POST.get('upvote', '')
+            
+        except:
+            upvote= None
+        try:
+            downvote = request.POST.get('downvote', '')
+        except:
+            downvote = None
+        if upvote:
+            if request.user in post.downvotes:
+                post.downvotes.remove(request.user)
+            post.upvotes.add(request.user)
+            post.save()
+        if downvote:
+            if request.user in post.upvotes:
+                post.upvotes.remove(request.user)
+            post.downvotes.add(request.user)
+            post.save()
+        
+        if reply and comment_id :
             replied_comment = get_object_or_404(Comment, id=comment_id)
             Comment.objects.create(text=reply, author=author, date_published=date_published, post=post, reply_comment=replied_comment)
         else:
-            Comment.objects.create(text=comment, author=author, date_published=date_published, post=post)
+            if comment:
+                Comment.objects.create(text=comment, author=author, date_published=date_published, post=post)
+
+                
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     return render(request, 'blog/post.html', {'post': post, 'comments':comments})
+
+
+
+
