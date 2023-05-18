@@ -35,6 +35,8 @@ def page(request):
     return render(request, 'blog/page.html')
 
 def create(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
@@ -80,13 +82,23 @@ def post_detail(request, post_id):
             downvote = request.POST.get('downvote', '')
         except:
             downvote = None
+        
         if upvote:
-            if request.user in post.downvotes:
+            try:
+                check_upvote = post.downvotes.get(pk=request.user.pk)
+            except:
+                check_upvote = None
+            if request.user==check_upvote and check_upvote is not None:
                 post.downvotes.remove(request.user)
             post.upvotes.add(request.user)
             post.save()
         if downvote:
-            if request.user in post.upvotes:
+            try:
+                check_downvote = post.upvotes.get(pk=request.user.pk)
+            except:
+                check_downvote = None
+                
+            if request.user==check_downvote and check_downvote is not None:
                 post.upvotes.remove(request.user)
             post.downvotes.add(request.user)
             post.save()
