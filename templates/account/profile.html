@@ -3,19 +3,19 @@
 {% block content %}
 <div class="main-wrapper">
     <header class="page-title theme-bg-light text-center gradient py-5">
-        <h1 class="heading">Register</h1>
+        <h1 class="heading">Update Profile</h1>
     </header>
     <br>
 <div class="row justify-content-center">
     
   <div class="col-lg-6">
     
-    <form method="post" action="">
+    <form method="post" action="" enctype="multipart/form-data">
       
       {% csrf_token %} 
     {% bootstrap_form form %}
       <div class="form-group">
-        <button type="submit" class="btn btn-primary">Register</button>
+        <button type="submit" class="btn btn-primary">Update</button>
       </div>
     </form>
   </div>

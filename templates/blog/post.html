@@ -16,7 +16,7 @@
 						{{post.tags}} 
 						</span>
 						
-						<span class="tag"><i class='fa fa-tag'></i>{{post.category}} </span><span class="comment"><a href="#comments"><i class='fa fa-comment'></i> {{comments.count}} comments</a></span></div>
+						<span class="tag"><i class='fa fa-tag'></i> {{post.category}} </span><span class="comment"><a href="#comments"><i class='fa fa-comment'></i> {{comments.count}} comments</a></span></div>
 				</header>
 
 				<div class="content-body">
@@ -24,26 +24,29 @@
 						<a href="#"><img class="img-fluid" src="{{ post.image.url }}" alt="image"></a>
 						<figcaption class="mt-2 text-center image-caption">Image Credit: <a href="#" target="_blank">{{post.image_credited}}</a></figcaption>
 					</figure>
-					{{ post.body|safe }}
+					<div class="bodypost-ckeditor">
+						{{ post.body|safe }}
+					</div>
 					
 					<div class="upvote">
+						
+						<p><i class="fas fa-thumbs-up"></i> {{ post.upvotes.all.count }}</p>
+    					<p><i class="fas fa-thumbs-down"></i> {{ post.downvotes.all.count }}</p>
 						{% if user.is_authenticated %}
-						<p>Upvotes= {{ post.upvotes.all.count }}</p>
-    					<p>Downvotes= -{{ post.downvotes.all.count }}</p>
 						<form method="post">
 						{% csrf_token %}
 						{% if request.user in post.upvotes.all %}
-    					<button class="upvote btn btn-primary disabled" value="upvote" type="submit" name="">Upvote</button>
+    					<button class="upvote btn btn-primary" disabled value="upvote" type="submit" name="">Upvote</button>
 						{% else %}
 						<button class="upvote btn btn-primary" value="upvote" type="submit" name="upvote">Upvote</button>
 						{% endif %}
 						{% if request.user in post.downvotes.all %}
-    					<button class="downvote btn btn-danger disabled" value="downvote" type="submit" name="">Downvote</button>
+    					<button class="downvote btn btn-danger" disabled value="downvote" type="submit" name="">Downvote</button>
 						{% else %}
 						<button class="downvote btn btn-danger" value="downvote" type="submit" name="downvote">Downvote</button>
 						{% endif%}
 						{% else %}
-						  <a href="{% url 'login' %}" class="btn btn-sm btn-outline-success">Login to Upvote</a>
+						  <a href="{% url 'login' %}" class="btn btn-sm btn-outline-success">Login to Vote</a>
 						{% endif %}
 						
 					  </div>
@@ -61,7 +64,7 @@
 						</div><!-- .comments-header -->
 
 						<div class="comments-inner">
-							{% if post.author != request.user %}
+							{% if post.author != request.user and user.is_authenticated %}
 							<form method="post">
 								{% csrf_token %}
 								<div class="input-group">
@@ -76,6 +79,12 @@
 								  <button class="btn btn-primary btn-lg active" type='submit'>  Comment </button>
 								</form>
 							{% endif %}
+							{% if not user.is_authenticated%}
+							<a href="{% url 'login' %}" class="btn btn-sm btn-outline-success">Login to Comment</a>
+							{% endif %}
+							
+							
+							
 							
 							<div id="comment-3"
 								class="comment byuser comment-author-andrew bypostauthor even thread-odd thread-alt depth-1">
@@ -84,9 +93,14 @@
 								<article id="div-comment-3" class="comment-body">
 									<footer class="comment-meta">
 										<div class="comment-author vcard">
+											{% if comment.author.profile.profile_picture.url %}
+											<img alt=""
+												src="{{comment.author.profile.profile_picture.url}}"
+												class="avatar avatar-120 photo" height="120" width="120">
+											{% else %}
 											<img alt=""
 												src="http://2.gravatar.com/avatar/e297925dbb035adc0b67aa14da4dcc0a?s=120&amp;d=mm&amp;r=g"
-												class="avatar avatar-120 photo" height="120" width="120"><span
+												class="avatar avatar-120 photo" height="120" width="120">{% endif %}<span
 												class="fn">{{comment.author.first_name}} {{comment.author.last_name}}</span><span
 												class="says sr-only">says:</span> </div>
 										<!-- .comment-author -->
@@ -101,27 +115,27 @@
 										</div><!-- .comment-metadata -->
 
 									</footer><!-- .comment-meta -->
-
+									{% if user.is_authenticated %}
 									<div class="comment-content entry-content">
 
 										<p>{{comment.text}}</p>
-										<form method = "post">
+										<form method="post">
 											{% csrf_token %}
-										<div class="form-group">
-											<button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#comment-form" id="comment-form{{comment.pk}}">Reply</button>
-										</div>
-										  
-										  	<div id="comment-form{{comment.pk}}" class="collapse">
-												<div class="form-group">
-											  
-											  	<textarea class="form-control" id="comment-text" name="reply"></textarea>
-											  	<input type="hidden" name="object_pk" value="{{ comment.pk }}">
+										<div class="comment">
+											
+											<button class="btn btn-primary reply-button" data-comment-id="{{ comment.id }}" type="button" data-bs-toggle="collapse" data-bs-target="#reply-form-{{ comment.id }}" aria-expanded="false" aria-controls="reply-form-{{ comment.id }}">Reply</button>
+											<div class="collapse reply-form" id="reply-form-{{ comment.id }}">
+											  <div class="card card-body">
+												<textarea class="form-control reply-textarea" name="reply"></textarea>
+												<br>
+												<input type="hidden" value="{{comment.pk}}" name="object_pk">
+												<button class="btn btn-primary-center submit-reply-button" data-comment-id="{{ comment.id }}" type="submit">Submit</button>
+											  </div>
 											</div>
-											<button type="submit" class="btn btn-primary">Submit</button>
 										  </div>
 										</form>
-										
-									</div><!-- .comment-content -->
+									</div>
+									{% endif%}<!-- .comment-content -->
 									{% endif %}
 									
 									<div id="comment-2"
@@ -135,13 +149,18 @@
 										
 										<footer class="comment-meta">
 											<div class="comment-author vcard">
-												<img alt=""
-													src="http://2.gravatar.com/avatar/e297925dbb035adc0b67aa14da4dcc0a?s=120&amp;d=mm&amp;r=g"
-													class="avatar avatar-120 photo" height="120" width="120"><span
+												{% if reply_comment.author.profile.profile_picture.url %}
+											<img alt=""
+												src="{{reply_comment.author.profile.profile_picture.url}}"
+												class="avatar avatar-120 photo" height="120" width="120">
+											{% else %}
+											<img alt=""
+												src="http://2.gravatar.com/avatar/e297925dbb035adc0b67aa14da4dcc0a?s=120&amp;d=mm&amp;r=g"
+												class="avatar avatar-120 photo" height="120" width="120">{% endif %}<span
 													class="fn">{{reply_comment.author.first_name}} {{reply_comment.author.last_name}}</span><span
 													class="says sr-only">says:</span> </div>
 											<!-- .comment-author -->
-
+											
 											<div class="comment-metadata">
 												
 													<time datetime="{{reply_comment.date_published}} "
@@ -181,9 +200,11 @@
 
 					<hr class="" aria-hidden="true">
 					<div id="respond" class="comment-respond">
-						<h2 id="reply-title" class="comment-reply-title">Leave a Reply <small><a rel="nofollow"
-									id="cancel-comment-reply-link" href="/?p=1#respond" style="display:none;">Cancel
-									reply</a></small></h2>
+						{% if user.is_authenticated %}
+						<h3 id="reply-title" class="comment-reply-title">Leave a Reply</h3>
+						{% else %}
+						<h3 id="reply-title" class="comment-reply-title">Leave a <a href="{% url 'login' %}">Reply</a></h3>
+						{% endif %}
 					</div><!-- #respond -->
 
 				</div>
@@ -203,7 +224,57 @@
 
 	</div>
 	<!--//main-wrapper-->
+
+	<script>
+		// Get all reply buttons
+		const replyButtons = document.querySelectorAll('.reply-button');
+	  
+		// Attach click event listener to each reply button
+		replyButtons.forEach(replyButton => {
+		  replyButton.addEventListener('click', (event) => {
+			const commentId = event.target.dataset.commentId;
+			const replyForm = document.getElementById(`reply-form-${commentId}`);
+			if (replyForm.classList.contains('show')) {
+			  replyForm.classList.remove('show');
+			} else {
+			  replyForm.classList.add('show');
+			}
+		  });
+		});
+	  
+		// Get all submit reply buttons
+		const submitReplyButtons = document.querySelectorAll('.submit-reply-button');
+	  
+		// Attach click event listener to each submit reply button
+		submitReplyButtons.forEach(submitReplyButton => {
+		  submitReplyButton.addEventListener('click', (event) => {
+			const commentId = event.target.dataset.commentId;
+			const replyTextarea = document.querySelector(`textarea[name="reply-${commentId}"]`);
+			const replyText = replyTextarea.value;
+			
+			// Perform any necessary actions with the reply text (e.g., submit it to the server)
+			
+			// Clear the reply textarea and hide the reply form
+			replyTextarea.value = '';
+			const replyForm = document.getElementById(`reply-form-${commentId}`);
+			replyForm.classList.remove('show');
+		  });
+		});
+	  </script>	
+	  <script>
+		// Find all image tags within the post body
+		const postBody = document.querySelector('.bodypost-ckeditor');
+		const images = postBody.querySelectorAll('img');
 	
+		// Loop through each image and set the desired height and width
+		images.forEach((image) => {
+			image.style.height = '400px';  // Set the desired height in pixels
+			image.style.width = 'auto';
+			image.style.display = 'block'; // Set the image to display as a block element
+        	image.style.marginLeft = 'auto'; // Center the image horizontally by setting left margin to auto
+        	image.style.marginRight = 'auto';    // Set the width to 'auto' for proportional scaling
+		});
+	</script>
 {% endblock %}
 
 

@@ -10,13 +10,15 @@
     <meta name="description" content="Blog Site Template">
     <meta name="author" content="https://youtube.com/FollowAndrew">    
     <link rel="shortcut icon" href="{% static 'images/logo.png' %}"> 
-    
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet"  type='text/css'>
     <!-- FontAwesome CSS-->
+	<link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
 	<!-- Bootstrap CSS-->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">  
 	<!-- Theme CSS -->
 	<link rel="stylesheet" href="{% static 'css/style.css' %}">
+	<link rel="stylesheet" href="{% static 'css/profile.css' %}">
 
 </head> 
 
@@ -52,11 +54,14 @@
 					</li>
 					{% if user.is_authenticated %}
 					<li class="nav-item">
-					    <a class="nav-link" href="{% url 'logout' %}"><i class="fa-sharp fa-regular fa-right-from-bracket fa-fade fa-sm"></i>Logout</a>
+					    <a class="nav-link" href="{% url 'profile_view' %}"><i class="fa fa-user fa-fw mr-2"></i> My Profile</a>
+					</li>
+					<li class="nav-item">
+					    <a class="nav-link" href="{% url 'logout' %}"><i class="fa fa-sign-out fa-fw mr-2"></i>Logout</a>
 					</li>
 					{% else%}
 					<li class="nav-item">
-					    <a class="nav-link" href="{% url 'login' %}"><i class="fas fa-sign-in fa-fw mr-2"></i>Login</a>
+					    <a class="nav-link" href="{% url 'login' %}"><i class="fa fa-sign-in fa-fw mr-2"></i>Login</a>
 					</li>
 					{% endif%}
 				</ul>

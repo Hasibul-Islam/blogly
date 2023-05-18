@@ -204,6 +204,7 @@ h6 {
 
 .footer {
     color: rgba(255, 255, 255, 0.7)
+    margin-top: auto;
 }
 
 .footer a {
@@ -306,6 +307,7 @@ h6 {
 .content .content-body li {
     font-size: 1.125rem;
     line-height: 1.6
+    
 }
 
 .content .content-body h1 {
