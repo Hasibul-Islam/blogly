@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import Group
 import random
+from django.contrib import messages
 import threading
 import time
 from django.shortcuts import render, redirect
@@ -12,8 +13,8 @@ from django.contrib.auth.decorators import login_required
 from .form import ProfileForm
 from django.core.mail import EmailMultiAlternatives
 from .models import Profile
-
-
+from django.contrib.sessions import serializers
+from django.conf import settings
 def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
@@ -103,41 +104,59 @@ def send_otp(subject, text_content, html_content, from_email, to):
 def change_password(request):
     if request.method == 'POST':
         email = request.POST.get('email')
-        otp = request.POST.get('otp')
-        new_password = request.POST.get('new_password')
-        confirm_password = request.POST.get('confirm_password')
+        password = request.POST.get('password')
+        
 
-        # Check if the entered passwords match
-        if new_password != confirm_password:
-            messages.error(request, "Passwords do not match.")
-            return redirect('change_password')
-
-        # Retrieve the user based on the provided email
+        
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
             messages.error(request, "User with this email does not exist.")
             return redirect('change_password')
-
+        user = authenticate(request, username=email, password=password)
+        if user is None:
+            
+            messages.error(request, "Wrong Password or Email")
+            return redirect('change_password')
+        
+        subject = "Your OTP is"  
         # Generate a new OTP and send it to the user's email
         new_otp = generate_otp()
-        send_otp(email, new_otp)
-
-        # Verify the OTP
-        if otp == new_otp:
-            # Set the new password
-            user.set_password(new_password)
-            user.save()
-
-            messages.success(request, "Password changed successfully.")
-            return redirect('login')
-        else:
-            messages.error(request, "Invalid OTP.")
-            return redirect('change_password')
+        subject = "Your OTP is "+str(new_otp)
+        text_content = "Your OTP is "+str(new_otp)+'. Submit this OTP to change your password.'
+        html_content = "<p><strong>"+text_content+"</strong></p>"
+        from_email= settings.EMAIL_HOST_USER
+        send_otp(subject, text_content, html_content, from_email, [email])
+        request.session['otp'] = str(new_otp)
+        return redirect('update_password')
+        
 
     return render(request, 'account/change_password.html')
 
+@login_required
+def update_password(request):
+    otp = request.session.get('otp')
+    
+    if request.method=="POST":
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('repeat_password')
+        submitted_otp = request.POST.get('otp')
+        if new_password != confirm_password:
+            messages.error(request, "Passwords do not match.")
+            return redirect('update_password')
 
+        if otp!=submitted_otp:
+            messages.error(request, "OTP do not match.")
+            return redirect('update_password')
+        user = request.user
+        user.set_password(new_password)
+        user.save()
+        login(request, user)
+        return redirect('password_changed_successfully')
+    return render(request, 'account/submit_password.html')        
+
+def password_changed_successfully(request):
+    return render(request, 'account/password_changed_successfully.html')
 
 @login_required
 def profile(request):
@@ -150,12 +169,15 @@ def profile(request):
         if form.is_valid():
             
             form.save()
-            return redirect('home')
+            return redirect('profile_view')
     else:
         form = ProfileForm(instance=profile, user=user)
 
     return render(request, 'account/profile.html', {'form': form})
 @login_required
 def profile_view(request):
-    profile = Profile.objects.get(user=request.user)
+    try:
+        profile = Profile.objects.get(user=request.user)
+    except:
+        return redirect('profile-create')
     return render(request, 'account/profile-view.html', {'profile': profile})

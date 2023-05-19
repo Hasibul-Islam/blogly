@@ -29,6 +29,8 @@ urlpatterns = [
     path('blog/', include(blog_urls)),
     path('account/', include(account_urls)),
     path('', views.home, name="home"),
+    path('newsletters/', views.contact_us_messages, name="newsletters"),
+    path('message-sent/', views.message_sent, name="message_sent"),
     path('contact-us/', views.contact_us, name="contact_us"),
     path('ckeditor/upload/', login_required(ckeditor_views.upload), name='ckeditor_upload'),
     path('ckeditor/browse/', never_cache(login_required(ckeditor_views.browse)), name='ckeditor_browse'),
