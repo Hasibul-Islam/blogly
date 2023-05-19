@@ -116,4 +116,3 @@ def post_detail(request, post_id):
 
 
 
-

@@ -5,3 +5,5 @@ account/__pycache__/
 account/migrations/
 Blog/__pycache__/
 media/
+email_settings.py
+apppassword.txt

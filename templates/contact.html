@@ -3,24 +3,27 @@
 
 {% block content %}
     
-    <div class="main-wrapper">
+    <div class=" main-wrapper">
 	    <header class="page-title theme-bg-light text-center gradient py-5">
 			<h1 class="heading">Contact Us</h1>
 		</header>
-	    <article class="about-section py-5">
-		    <div class="container">			    
-				<form>
+		
+	    <article class="vh-100 d-flex about-section py-5">
+		    <div class="container">	
+						    
+				<form method="post">
+					{% csrf_token %}
 					<div class="form-group">
 					  <label for="exampleInputEmail1">Email address</label>
-					  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+					  <input type="email" class="form-control" id="exampleInputEmail1" name="email"aria-describedby="emailHelp">
 					  <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
 					</div>
 					<div class="form-group">
 					  <label for="exampleMessage">Message</label>
-					  <textarea class="form-control" id="exampleMessage"></textarea>
+					  <textarea class="form-control" name="message" id="exampleMessage"></textarea>
 					</div>
 					<div class="form-group form-check">
-					  <input type="checkbox" class="form-check-input" id="exampleCheck1">
+					  <input type="checkbox" class="form-check-input" name="subscribe" id="exampleCheck1" value="1">
 					  <label class="form-check-label" for="exampleCheck1">Subscribe to Newsletter</label>
 					</div>
 					<button type="submit" class="btn btn-primary">Send Message</button>
@@ -30,7 +33,7 @@
 	    
 	    
 	    
-	    <footer class="footer text-center py-2 theme-bg-dark" >
+	    <footer class="footer text-center py-2 theme-bg-dark bottom" >
 		   
             <p class="copyright"><a href="">FollowBlogly</a></p>
 		   

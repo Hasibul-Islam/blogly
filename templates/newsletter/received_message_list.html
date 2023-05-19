@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% block content %}
+<div class="main-wrapper">
+    <header class="page-title theme-bg-light text-center gradient py-5">
+        <h1 class="heading">NewsLetters</h1>
+    </header>
+    <br>
+
+<section class="vh-100" style="background-color: #eee;">
+    <div class="container py-1 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col col-lg-9 col-xl-12">
+          <div class="card rounded-3">
+            <div class="card-body p-4">
+  
+              <h4 class="text-center my-3 pb-3">Newsletters</h4>
+  
+              
+  
+              <table class="table mb-4">
+                <thead>
+                  <tr>
+                    <th scope="col">No.</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Message</th>
+                    <th scope="col">Subscribed</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for item in newsletters %}
+                  <tr>
+                    <th scope="row">{{ forloop.counter0|add:newsletters.start_index }}</th>
+                    <td>{{item.email}}</td>
+                    <td>{{item.message}}</td>
+                    {% if item.subscribe %}
+                    <td>Yes</td>
+                    {% else%}
+                    <td>No</td>
+                    {% endif %}
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+              
+            </div>
+          </div>
+          <nav class="blog-nav nav nav-justified my-4">
+            <span>
+              {% if newsletters.has_previous %}
+                <a href="?page=1">&laquo; First</a>
+                <a href="?page={{ newsletters.previous_page_number }}">Previous</a>
+              {% endif %}
+          
+              <span class="current-page">
+                Page {{ newsletters.number }} of {{ newsletters.paginator.num_pages }}.
+              </span>
+          
+              {% if newsletters.has_next %}
+                <a href="?page={{ newsletters.next_page_number }}">Next</a>
+                <a href="?page={{ newsletters.paginator.num_pages }}">Last &raquo;</a>
+              {% endif %}
+            </span>
+  
+          </nav>
+        </div>
+      </div>
+    </div>
+    
+  </section>
+  <footer class="footer text-center py-2 theme-bg-dark">
+		   
+    <p class="copyright"><a href="">FollowBlogly</a></p>
+   
+</footer>
+</div>
+{% endblock%}
