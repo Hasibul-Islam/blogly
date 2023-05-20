@@ -2,17 +2,17 @@
 
 Features of this system are:
 
-[1] 'Registration'
-[2] 'Login'
-[3] 'Logout'
-[4] 'Write Blog'
-[5] 'Comment on Blog'
-[6] 'Reply on Comment'
-[7] 'Vote on Blog'
-[8] 'Newsletter Subscription'
-[9] 'Contact Message'
-[10] 'Profile Creation'
-[11] 'Change Password with OTP using Session'
+[1] 'Registration' <br>
+[2] 'Login' <br>
+[3] 'Logout' <br>
+[4] 'Write Blog' <br>
+[5] 'Comment on Blog' <br>
+[6] 'Reply on Comment' <br>
+[7] 'Vote on Blog' <br>
+[8] 'Newsletter Subscription' <br>
+[9] 'Contact Message' <br>
+[10] 'Profile Creation' <br>
+[11] 'Change Password with OTP using Session' <br>
 
 And Many more to come.
 
