@@ -42,6 +42,8 @@ python manage.py runserver
 
 ```
 
-If you want to get the docker image for this app DM me through my <a href="mailto:polok.hasibul@gmail.com?"><img src="https://img.shields.io/badge/gmail-%23DD0031.svg?&style=for-the-badge&logo=gmail&logoColor=white"/></a>
+If you want to get the docker image for this app DM me through my 
+
+<a href="mailto:polok.hasibul@gmail.com?"><img src="https://img.shields.io/badge/gmail-%23DD0031.svg?&style=for-the-badge&logo=gmail&logoColor=white"/></a>
 
 
